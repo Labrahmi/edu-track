@@ -6,6 +6,8 @@ export interface Student {
   status: AttendanceStatus;
   imageUrl: string;
   grade: number;
+  MainClass: string;
+  ExternalCode: string;
 }
 
 export interface StudentsByGrade {

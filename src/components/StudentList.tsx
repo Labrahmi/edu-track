@@ -61,9 +61,9 @@ const StudentList: React.FC<StudentListProps> = ({ students, onUpdateStatus, isD
 
   const handleStatusUpdate = (id: number, status: AttendanceStatus) => {
     onUpdateStatus(id, status);
-    if (status === 'present') {
-      triggerConfetti();
-    }
+    // if (status === 'present') {
+    //   triggerConfetti();
+    // }
   };
 
   const getStatusButton = (status: AttendanceStatus, currentStatus: AttendanceStatus, onClick: () => void) => {
@@ -109,7 +109,7 @@ const StudentList: React.FC<StudentListProps> = ({ students, onUpdateStatus, isD
               <img
                 src={student.imageUrl}
                 alt={student.name}
-                className={`w-10 h-10 rounded-full object-cover border-2 transition-all duration-300 ${
+                className={`w-12 h-12 rounded-full object-cover border-2 transition-all duration-300 ${
                   student.status === 'present'
                     ? 'border-emerald-400 scale-110'
                     : isDarkMode
@@ -118,7 +118,7 @@ const StudentList: React.FC<StudentListProps> = ({ students, onUpdateStatus, isD
                 }`}
               />
               {student.status === 'present' && (
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-white dark:border-gray-800 animate-pulse" />
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-white dark:border-gray-800" />
               )}
             </div>
             <div>
@@ -126,7 +126,7 @@ const StudentList: React.FC<StudentListProps> = ({ students, onUpdateStatus, isD
                 {student.name}
               </span>
               <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                Grade {student.grade}
+                {student.ExternalCode}
               </div>
             </div>
           </div>

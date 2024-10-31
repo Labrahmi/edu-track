@@ -5,17 +5,43 @@ import StatusHeader from './components/StatusHeader';
 import GradeSelector from './components/GradeSelector';
 import Header from './components/Header';
 import { Student, AttendanceStatus } from './types';
+import studentsListData from './students'
+import { useEffect } from 'react';
+
+enum AttendanceStatus {
+  Present = 'present',
+  Parent = 'parent',
+  Bus = 'bus',
+  Absent = 'absent'
+}
+
+interface Student {
+  id: number;
+  name: string;
+  status: AttendanceStatus;
+  grade: number;
+  imageUrl: string;
+  MainClass: string;
+  ExternalCode: string;
+}
 
 function App() {
   const [selectedGrade, setSelectedGrade] = useState<number>(1);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [students, setStudents] = useState<Student[]>([
-    { id: 1, name: 'Emma Thompson', status: 'absent', grade: 1, imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=100&h=100' },
-    { id: 2, name: 'Lucas Chen', status: 'absent', grade: 1, imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100' },
-    { id: 3, name: 'Sofia Rodriguez', status: 'absent', grade: 2, imageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100&h=100' },
-    { id: 4, name: 'Alexander Kim', status: 'absent', grade: 2, imageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100&h=100' },
-    { id: 5, name: 'Isabella Patel', status: 'absent', grade: 3, imageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100&h=100' },
-  ]);
+  const [students, setStudents] = useState<Student[]>([]);
+
+  useEffect(() => {
+    const transformedStudents = studentsListData.map((student: any) => ({
+      id: student["External Code"],
+      name: `${student["First Name"]} ${student["Last Name"]}`,
+      status: AttendanceStatus.Absent, // Ensure this is of type AttendanceStatus
+      grade: parseInt(student["Grade"].replace('Grade ', '')),
+      imageUrl: student["Photo"] || 'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png',
+      MainClass: student["Main Class"],
+      ExternalCode: student["External Code"]
+    }));
+    setStudents(transformedStudents);
+  }, []);
 
   const updateStatus = (studentId: number, status: AttendanceStatus) => {
     setStudents(students.map(student =>
@@ -24,12 +50,12 @@ function App() {
   };
 
   const filteredStudents = students.filter(student => student.grade === selectedGrade);
-  
+
   const statusCounts = {
-    present: filteredStudents.filter(s => s.status === 'present').length,
-    parent: filteredStudents.filter(s => s.status === 'parent').length,
-    bus: filteredStudents.filter(s => s.status === 'bus').length,
-    absent: filteredStudents.filter(s => s.status === 'absent').length,
+    present: filteredStudents.filter(s => s.status === AttendanceStatus.Present).length,
+    parent: filteredStudents.filter(s => s.status === AttendanceStatus.Parent).length,
+    bus: filteredStudents.filter(s => s.status === AttendanceStatus.Bus).length,
+    absent: filteredStudents.filter(s => s.status === AttendanceStatus.Absent).length,
   };
 
   return (
@@ -43,14 +69,14 @@ function App() {
               <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-1">Student Attendance</h1>
               <p className="text-gray-600 dark:text-gray-400">Track and manage student departures</p>
             </div>
-            <GradeSelector 
-              selectedGrade={selectedGrade} 
+            <GradeSelector
+              selectedGrade={selectedGrade}
               onGradeChange={setSelectedGrade}
               isDarkMode={isDarkMode}
             />
           </div>
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            {new Date().toLocaleDateString('en-US', { 
+            {new Date().toLocaleDateString('en-US', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',
@@ -95,8 +121,8 @@ function App() {
             <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Student List</h2>
           </div>
           {filteredStudents.length > 0 ? (
-            <StudentList 
-              students={filteredStudents} 
+            <StudentList
+              students={filteredStudents}
               onUpdateStatus={updateStatus}
               isDarkMode={isDarkMode}
             />

@@ -14,7 +14,7 @@ const Header: React.FC<HeaderProps> = ({ isDarkMode, onDarkModeToggle }) => {
           <div className="flex items-center gap-2">
             <GraduationCap className={`w-6 h-6 ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`} />
             <span className={`font-semibold text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              EduTrack
+              London Academy
             </span>
           </div>
 
